@@ -1,4 +1,4 @@
-import { Serialization } from '@cardano-sdk/core';
+import { Serialization, Cardano } from '@cardano-sdk/core';
 import { HexBlob } from '@cardano-sdk/util';
 
 const cbor = HexBlob(
@@ -6,7 +6,8 @@ const cbor = HexBlob(
 );
 
 const data = Serialization.PlutusData.fromCbor(cbor);
-const roundTrippedCbor = Serialization.PlutusData.fromCore(data.toCore()).toCbor();
+const core = data.toCore() as unknown as Cardano.PlutusList;
+const roundTrippedCbor = Serialization.PlutusData.fromCore({ items: core.items }).toCbor();
 
 if (cbor === roundTrippedCbor) {
     console.log('Round trip successful');
